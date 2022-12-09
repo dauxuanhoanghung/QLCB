@@ -1,5 +1,27 @@
 {% extends 'layout/base.html' %}
+{% block title %}Đăng nhập người dùng{% endblock %}
 {% block content %}
 <h1 class="text text-dark text-center bg-info bg-gradient">Đăng nhập người dùng</h1>
-{% include 'layout/form.html '%}
+{% if err_msg %}
+    <div class="alert alert-success">
+        {{ err_msg }}
+    </div>
+{% endif %}
+<form method="post" action="{{ url_for('login_my_user') }}" class="row g-3">
+        <div class="col-md-8">
+            <label for="inputUsername4" class="form-label" >Username</label>
+            <input type="username" class="form-control" id="inputUsername4" name="username" required>
+        </div>
+        <div class="col-md-6">
+            <label for="inputPassword4" class="form-label">Password</label>
+            <input type="password" class="form-control" id="inputPassword4" name="password" required>
+        </div>
+
+        <br>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Sign in</button>
+        </div>
+</form>
+<br>
+<br>
 {% endblock %}

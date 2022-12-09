@@ -24,7 +24,7 @@ class User(BaseModel, UserMixin):
     identity_number = Column(String(15))
     email = Column(String(80))
     phone_number = Column(String(15))
-    avatar = Column(Text)
+    avatar = Column(String(255), nullable=True)
     is_active = Column(Boolean, default=True)
     user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.USER)
 
