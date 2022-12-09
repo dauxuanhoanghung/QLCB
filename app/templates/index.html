@@ -1,10 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'layout/base.html' %}
+{% block content %}
+<div id="myCarou">
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for apt in airports %}
+            {% if apt.name.__eq__("HAN") %}
+            <div class="carousel-item active">
+                {% else %}
+                <div class="carousel-item">
+                    {% endif %}
+                    <img src="{{ url_for('static', filename='images/')}}{{apt.picture}}" class="d-block w-100 cover"
+                         alt="{{ apt.location }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <a class="carousel-control-prev" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </a>
+            <a class="carousel-control-next" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
+</div>
+{% block flight_content %}
+<div class="container">
+    <div class="fr-row  ">
+        <div class=" fr-col-sm-12">
+            <h2 class="fr-h2 fr-my-0  fr-text-left fr-font-size-6-x  fr-float-left  fr-1998964887 fr--577374426"
+                data-testid="headerTitle">Khám Phá Các Chuyến Bay Phổ Biến Nhất Của Chúng Tôi</h2>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for f in flights %}
+            <div class="col-md-3 col-sm-6 flight" id="flight{{f.id}}" style="padding:1.5rem;">
+                <a href="/flight/{{f.id}}">
+                    <div class="flight-image">
+                        <img src="{{ url_for('static', filename='/images/') }}{{ f.flight_route.departure_airport.picture }}"/>
+                        <img src="{{ url_for('static', filename='/images/') }}{{ f.flight_route.arrival_airport.picture }}"/>
+                    </div>
+                    <div class="flight-info">
+                        <h3 class="text-white">{{ f.flight_route.departure_airport.location }} đến</h3>
+                        <h3 class="text-white">{{ f.flight_route.arrival_airport.location }}</h3>
+                        <p class="text-white">{{ f.takeoff_time.strftime("%d-%m-%Y") }}</p>
+                        <p class="text text-end text-white pe-4">Từ</p>
+                        <h4 class=" text text-end text-warning pe-4">{{ "{:,.1f}".format(f.base_price) }} VNĐ</h4>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% endblock %}

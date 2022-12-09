@@ -1,0 +1,67 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container-fluid">
+        <a class="navbar-toggler" type="button" href="/"
+           data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent"
+           aria-controls="navbarSupportedContent" aria-expanded="false"
+           aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <a class="navbar-brand mt-2 mt-lg-0" href="/">
+                <i class="fa-solid fa-plane-departure"></i>
+            </a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link" href="javascript:;">Tìm kiếm chuyến bay</a></li>
+                <li class="nav-item"><a class="nav-link" href="javascript:;">Projects</a></li>
+            </ul>
+        </div>
+        <div class="d-flex align-items-center">
+            <div class="dropdown me-2">
+                <a class="text-reset me-3 dropdown-toggle hidden-arrow"
+                   href="#" id="navbarDropdownMenuLink"
+                   role="button" data-mdb-toggle="dropdown"
+                   aria-expanded="false"><i class="fa fa-ticket" aria-hidden="true" style="font-size: 30px"></i>
+                    <span class="badge rounded-pill badge-notification"
+                          style="background-color: rgb(255, 78, 34)">0</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                    <!--                    <li><a class="dropdown-item" href="javascript:;">Some news</a></li>-->
+                    {% if not current_user.is_authenticated %}
+                    <h6>Vui lòng <a href="/login">đăng nhập</a> để biết thêm chi tiết</h6>
+                    {% else %}
+                    <h6>Chưa có j</h6>
+                    {% endif %}
+                </ul>
+            </div>
+            {% if current_user.is_authenticated %}
+            <div class="dropdown">
+                <a class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                   href="#" id="navbarDropdownMenuAvatar"
+                   role="button" data-mdb-toggle="dropdown"
+                   aria-expanded="false">
+                    <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+                         class="rounded-circle" height="40" loading="lazy"/>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="navbarDropdownMenuAvatar">
+                    <li><a class="dropdown-item" href="#">My profile</a></li>
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+            </div>
+            {% else %}
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-success" href="/login">Đăng nhập</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="/register">Đăng ký</a>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>

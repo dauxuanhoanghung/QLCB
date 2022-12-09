@@ -1,0 +1,16 @@
+<div class="containerToTop">
+    <button id="myBtnToTop" title="Go to top"><i class="fa fa-plane text-white" aria-hidden="true"></i></button>
+</div>
+<script>
+    window.onscroll = function() {
+        let btn = document.getElementById("myBtnToTop")
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20)
+            btn.style.display = "block";
+        else
+            btn.style.display = "none";
+    }
+    document.getElementById('myBtnToTop').addEventListener("click", function(){
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    });
+</script>

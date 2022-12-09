@@ -1,0 +1,71 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+a {
+    text-decoration: none !important;
+}
+#myCarou {
+    position: relative;
+}
+.cover {
+    object-fit: cover;
+    height: 420px;
+}
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background: rgba(33,33,33,.7);
+    border-radius: 50%;
+    top: 50%;
+    transform: translate(0, -50%);
+    width: 40px;
+    height: 40px;
+}
+.carousel-control-prev, .carousel-control-next {
+    cursor: pointer;
+}
+.carousel-control-prev {
+    left: 0;
+    transform: translateX(-50%);
+}
+.carousel-control-next {
+    right: 0;
+    transform: translateX(50%);
+}
+.containerToTop {
+    width: 500px;
+    margin: auto;
+}
+#myBtnToTop {
+    display: none;
+    position: fixed;
+    background-color: transparent;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 50%;
+}
+.flight {
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+}
+.flight:hover .flight-info {
+    height: calc(400px - 3rem)
+}
+.flight img {
+    height: 180px;
+    object-fit: cover;
+}
+.flight-info {
+    background-color: rgba(59, 130, 246, 0.5);
+    position: absolute;
+    height: 200px;
+    width: 100%;
+    bottom: 1rem;
+    transition-duration: 1.25s;
+}
