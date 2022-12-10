@@ -32,9 +32,6 @@ class User(BaseModel, UserMixin):
         return self.name
 
 
-
-
-
 class Airport(BaseModel):
     name = Column(String(80), nullable=False)
     location = Column(String(100), nullable=False)

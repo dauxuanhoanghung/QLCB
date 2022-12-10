@@ -16,6 +16,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app=app)
 login_mana = LoginManager(app=app)
 babel = Babel(app=app)
+cloudinary.config(cloud_name='dm5nn54wh', api_key='836445152769358', api_secret='dxV48f7EsDEvsA4jeIRvjDBWbqM')
 
 
 @babel.localeselector

@@ -1,5 +1,50 @@
 {% extends 'layout/base.html' %}
+{% block title %}Đăng ký người dùng{% endblock %}
 {% block content %}
 <h1 class="text text-dark text-center bg-info bg-gradient">Đăng ký người dùng</h1>
-{% include 'layout/form.html '%}
+{% if err_msg %}
+    <div class="alert alert-success">
+        {{ err_msg }}
+    </div>
+{% endif %}
+<form method="post" enctype="multipart/form-data" action="{{ url_for('register_my_user') }}" class="row g-3">
+        <div class="col-md-8">
+            <label for="inputUsername4" class="form-label" >Username</label>
+            <input type="username" class="form-control" id="inputUsername4" name="username" required>
+        </div>
+        <div class="col-md-6">
+            <label for="inputPassword4" class="form-label">Password</label>
+            <input type="password" class="form-control" id="inputPassword4" name="password" required>
+        </div>
+        <div class="col-md-6">
+            <label for="confirm" class="form-label">Confirm password</label>
+            <input type="password" class="form-control" id="confirm" name="confirm" required>
+        </div>
+        <div class="col-md-6">
+            <label for="inputName4" class="form-label">Name</label>
+            <input type="text" class="form-control" id="inputName4" name="name" required>
+        </div>
+        <div class="col-md-3">
+            <label for="inputId4" class="form-label">Identity</label>
+            <input type="identity" class="form-control" id="inputId4" name="identity_number" required>
+        </div>
+        <div class="col-md-3">
+            <label for="inputPhoneNumber4" class="form-label">Phone number</label>
+            <input type="phoneNumber" class="form-control" id="inputPhoneNumber4" name="phone_number" >
+        </div>
+        <div class="col-md-12">
+            <label for="inputEmail4" class="form-label">Email</label>
+            <input type="email" class="form-control" id="inputEmail4" name="email" >
+        </div>
+        <div class="form-floating mt-3 mb-3">
+            <input type="file" class="form-control"  id="avatar" placeholder="Choose avatar" name="avatar">
+            <label for="avatar">Avatar</label>
+        </div>
+        <br>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Sign up</button>
+        </div>
+</form>
+<br>
+<br>
 {% endblock %}
