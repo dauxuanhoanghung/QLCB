@@ -32,13 +32,16 @@ class User(BaseModel, UserMixin):
         return self.name
 
 
+
+
+
 class Airport(BaseModel):
     name = Column(String(80), nullable=False)
     location = Column(String(100), nullable=False)
     picture = Column(String(200))
 
     def __str__(self):
-        return '{0} {1}'.format(self.name, self.location)
+        return '{0} - {1}'.format(self.name, self.location)
 
 
 class FlightRoute(BaseModel):
@@ -50,7 +53,7 @@ class FlightRoute(BaseModel):
                                    foreign_keys='FlightRoute.arrival_airport_id')
 
     def __str__(self):
-        return ' '
+        return self.departure_airport.location + ' - ' + self.arrival_airport.location
 
 
 # class ArrivalAirportOfRoute(BaseModel):
@@ -83,11 +86,15 @@ class Flight(BaseModel):
     transit_airports = relationship('TransitAirport', backref='flights', lazy=True)
     tickets = relationship('Ticket', backref='flight', lazy=True)
 
+    def __str__(self):
+        return str(self.flight_route) + ' vào ' + str(self.takeoff_time)
+
 
 class TransitAirport(BaseModel):
     break_time = Column(DateTime, nullable=False)
     flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
     airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
+    airport = relationship('Airport', backref='transit_airports', lazy=True)
 
 
 class Seat(BaseModel):

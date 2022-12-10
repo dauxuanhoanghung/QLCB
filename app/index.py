@@ -1,6 +1,6 @@
 from flask import session
 from flask import render_template, request, redirect, session, jsonify
-from app import app, dao, login_mana
+from app import app, dao, login_mana, admin
 from flask_login import login_user, logout_user, login_required
 from app import utils
 

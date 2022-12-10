@@ -15,3 +15,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app=app)
 login_mana = LoginManager(app=app)
+babel = Babel(app=app)
+
+
+@babel.localeselector
+def load_locale():
+    return 'vi'
