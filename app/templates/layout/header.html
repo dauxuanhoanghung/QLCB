@@ -23,14 +23,25 @@
                    role="button" data-mdb-toggle="dropdown"
                    aria-expanded="false"><i class="fa fa-ticket" aria-hidden="true" style="font-size: 30px"></i>
                     <span class="badge rounded-pill badge-notification"
-                          style="background-color: rgb(255, 78, 34)">0</span>
+                          style="background-color: rgb(255, 78, 34)">{{ ticket_number }}</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" style="width: 300px">
                     <!--                    <li><a class="dropdown-item" href="javascript:;">Some news</a></li>-->
                     {% if not current_user.is_authenticated %}
                     <h6>Vui lòng <a href="/login">đăng nhập</a> để biết thêm chi tiết</h6>
                     {% else %}
+                    {% if current_user.tickets %}
+                    {% for t in current_user.tickets %}
+                    <li class="col-md-12" style="font-size: 10px; list-style: none">
+                        <span class="text-danger">{{ t.flight.flight_route.departure_airport.location }}</span> đến
+                        <span class="text-danger">{{ t.flight.flight_route.arrival_airport.location }}</span> vào
+                        <span class="text-danger">{{ t.flight.takeoff_time }}</span>
+                        <hr>
+                    </li>
+                    {% endfor %}
+                    {% else %}
                     <h6>Chưa có j</h6>
+                    {% endif %}
                     {% endif %}
                 </ul>
             </div>

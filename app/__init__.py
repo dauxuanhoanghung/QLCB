@@ -12,6 +12,7 @@ app = Flask(__name__)
 app.secret_key = 'Hung28122002!@#$%^&Phuc14042002'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:%s@localhost/' % quote(pwd) + db + '?charset=utf8mb4'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['page_size'] = 8
 
 db = SQLAlchemy(app=app)
 login_mana = LoginManager(app=app)

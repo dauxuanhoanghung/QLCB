@@ -119,9 +119,17 @@ class Ticket(BaseModel):
     flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
 
+    user = relationship(User, backref='tickets', lazy=True)
+
 
 class Regulation(BaseModel):
-    name = Column(Text)
+    min_flying_time = Column(Time, nullable=False)
+    max_transit_airport = Column(Integer, nullable=False, default=2)
+    min_break_time = Column(Time, nullable=False)
+    max_break_time = Column(Time, nullable=False)
+    number_ticket_type = Column(Integer, nullable=False, default=2)
+    selling_time = Column(Time, nullable=False)
+    booking_time = Column(Time, nullable=False)
 
 
 if __name__ == '__main__':

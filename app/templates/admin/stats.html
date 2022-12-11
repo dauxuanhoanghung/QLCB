@@ -1,39 +1,78 @@
 {% extends 'admin/master.html' %}
 {% block body %}
-<h1 class="text-center text-info">THÔNG KÊ, BÁO CÁO</h1>
-
+<h1 class="text-center text-info">THỐNG KÊ, BÁO CÁO</h1>
 <div class="row">
-    <div class="col-md-5 col-sm-12">
-        <table class="table">
-            <tr>
-                <th>Id</th>
-                <th>Tên sản phẩm</th>
-                <th>Doanh thu</th>
-            </tr>
-            {% for s in stats %}
-            <tr>
-                <td>{{ s[0] }}</td>
-                <td>{{ s[1] }}</td>
-                <td>{{ "{:,.0f}".format(s[2]) }} VNĐ</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
     <div class="col-md-7 col-sm-12">
-        <form>
+        <form method="post">
             <div class="form-group">
-                <label>Từ ngày</label>
-                <input type="date" class="form-control" name="from_date"/>
+                <label>Năm</label>
+                <input type="number" class="form-control" name="year" placeholder="Nhập năm..." id="year"/>
             </div>
-            <div class="form-group">
-                <label>Đến ngày</label>
-                <input type="date" class="form-control" name="to_date"/>
-            </div>
+            <select class="form-select browser-default custom-select mb-4 col-md-8 " id="month"
+                        name="month" aria-label=".form-select-sm example" required>
+                    <option value="" disabled="" selected>Chọn tháng</option>
+                    {% for i in range(1, 13) %}
+                    <option value="{{ i }}" name="month">Tháng {{ i }}</option>
+                    {% endfor%}
+            </select>
             <div>
-                <input type="submit" value="Lọc dữ liệu" class="btn btn-info"/>
+                <input type="button" value="Lọc dữ liệu" class="btn btn-info" id="fetch"/>
             </div>
         </form>
-        <canvas id="revenueChart"></canvas>
     </div>
 </div>
+<div class="row" id="table" style="display: none">
+    <div class="col-md-5 col-sm-12">
+        <table class="table">
+        </table>
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <canvas id="percentChart"></canvas>
+    </div>
+</div>
+<canvas id="revenueChart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/my-stats.js') }}"></script>
+<script>
+
+document.getElementById('fetch').onclick = () => {
+    json = JSON.stringify({
+        "year": document.getElementById('year').value,
+        "month": document.getElementById('month').value
+    })
+    fetch('/admin/fetch', {
+        method: "post",
+        body: json,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
+        document.getElementById('table').style.display = 'flex'
+        let percentData = []
+        let labels = []
+        let tb = document.querySelector('table')
+        tb.innerHTML = `<tr>
+                <th>Id</th>
+                <th>Tuyến bay</th>
+                <th>Số lượt bay</th>
+                <th>Tỉ lệ</th>
+            </tr>`
+        data['stats'].forEach(e => {
+            tb.innerHTML += `<tr>
+                <td>${e.id}</td>
+                <td>${e.flight_route}</td>
+                <td>${e.route_count}</td>
+                <td>${e.route_count/data['flight_count'] * 100}%</td>
+            </tr>`
+            labels.push(e.flight_route)
+            percentData.push(e.route_count)
+        })
+        percentChart(labels, percentData)
+    })
+    .catch(err => console.log(err))
+}
+</script>
 {% endblock %}

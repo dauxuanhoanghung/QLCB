@@ -53,6 +53,15 @@
             </div>
             {% endfor %}
         </div>
+        {% if pages > 1%}
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% for index in range(1, pages + 1) %}
+                <li class="page-item"><a class="page-link" href="{{url_for('index', page=index)}}">{{index}}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
