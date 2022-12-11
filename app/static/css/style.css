@@ -75,3 +75,69 @@ footer {
     left: 0;
     right: 0;
 }
+.card{
+    height: 100px;
+    width: 200px;
+    position: relative;
+    margin: 10px;
+}
+input[type="radio"]{
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: white;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    position: absolute;
+    box-shadow: 7px 7px 15px rgba(2,28,53,0.08);
+    cursor: pointer;
+    outline: none;
+}
+input[type="radio"]:before{
+    content: "";
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    background-color: #f9fafd;
+    border: 1px solid #e2e6f3;
+    border-radius: 50%;
+    top: 35px;
+    right: 20px;
+}
+input[type="radio"]:after{
+    content: "";
+    position: absolute;
+    height: 13px;
+    width: 13px;
+    background-color: transparent;
+    border-radius: 50%;
+    top: 39.5px;
+    right: 24.5px;
+}
+label.card_label{
+    position: absolute;
+    margin: 20px;
+    cursor: pointer;
+}
+h5{
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+}
+h2{
+    font-size: 28px;
+}
+span{
+    font-weight: 400;
+    font-size: 18px;
+    color: #7b7b93;
+}
+input[type="radio"]:hover{
+    transform: scale(1.05);
+}
+input[type="radio"]:checked{
+    border: 3px solid #478bfb;
+}
+input[type="radio"]:checked:after{
+    background-color: #478bfb;
+}

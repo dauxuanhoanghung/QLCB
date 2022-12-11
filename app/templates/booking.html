@@ -40,27 +40,9 @@
         </div>
     </form>
 </div>
-{% if flights %}
-<div>
-    {% for f in flights %}
-    <div class="col-md-3 col-sm-6 flight" id="flight{{f.id}}" style="padding:1.5rem;">
-        <a href="/flight/{{f.id}}">
-            <div class="flight-image">
-                <img src="{{ url_for('static', filename='/images/') }}{{ f.flight_route.departure_airport.picture }}"/>
-                <img src="{{ url_for('static', filename='/images/') }}{{ f.flight_route.arrival_airport.picture }}"/>
-            </div>
-            <div class="flight-info">
-                <h3 class="text-white">{{ f.flight_route.departure_airport.location }} đến</h3>
-                <h3 class="text-white">{{ f.flight_route.arrival_airport.location }}</h3>
-                <p class="text-white">{{ f.takeoff_time.strftime("%d-%m-%Y") }}</p>
-                <p class="text text-end text-white pe-4">Từ</p>
-                <h4 class=" text text-end text-warning pe-4">{{ "{:,.1f}".format(f.base_price) }} VNĐ</h4>
-            </div>
-        </a>
-    </div>
-    {% endfor %}
+<div id="flights">
+
 </div>
-{% endif %}
 <script>
 document.getElementById('find').onclick = () => {
 let f = document.getElementById('fromAirport').value
@@ -68,6 +50,44 @@ let t = document.getElementById('toAirport').value
 let s = document.getElementById('start').value
     getFlights(f,t,s)
 }
-
+function getFlights(fromAirportId, toAirportId, date) {
+    let json = JSON.stringify({
+        "fromAirport": fromAirportId,
+        "toAirport": toAirportId,
+        "trip-start": date
+    })
+    fetch("/booking", {
+        method: "post",
+        body: json,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(f => {
+        console.log(f)
+        let html = '<div class="row">'
+        f.forEach(e => html += `
+            <div class="col-md-3 col-sm-6 flight" id=flight${e.id} style="padding:1.5rem;">
+                <a href="/flight/${e.id}">
+                    <div class="flight-image">
+                        <img src="static/images/${e.flight_route.departure_img}"/>
+                        <img src="static/images/${e.flight_route.arrival_img}"/>
+                    </div>
+                    <div class="flight-info">
+                        <h3 class="text-white">${e.flight_route.departure_airport} đến</h3>
+                        <h3 class="text-white">${e.flight_route.arrival_airport}</h3>
+                        <p class="text-white">${e.takeoff_time}</p>
+                        <p class="text text-end text-white pe-4">Từ</p>
+                        <h4 class="text text-end text-warning pe-4">${e.base_price} VNĐ</h4>
+                    </div>
+                </a>
+            </div>`
+        )
+        console.log(html)
+        document.getElementById('flights').innerHTML = html + "</div>"
+    })
+    .catch(err => console.log(err))
+}
 </script>
 {% endblock %}

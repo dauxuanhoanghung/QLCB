@@ -1,4 +1,58 @@
 {% extends 'layout/base.html' %}
 {% block content %}
-
+<div class="row">
+    <div class="col-md-6">
+        <h2 class="mb-0">{{f.flight_route.departure_airport.location}} đến</h2>
+        <img style="object-fit: cover; width:100%"
+             src="{{ url_for('static', filename='/images/') }}{{ f.flight_route.departure_airport.picture }}"/>
+    </div>
+    <div class="col-md-6">
+        <h2 class="mb-0">{{f.flight_route.arrival_airport.location}}</h2>
+        <img style="object-fit: cover; width:100%"
+             src="{{ url_for('static', filename='/images/') }}{{ f.flight_route.arrival_airport.picture }}"/>
+    </div>
+    <div class="">
+        <h3 class="text-dark">Thời gian bay: {{ f.takeoff_time.strftime("%H:%M:%S %d-%m-%Y") }}</h3>
+    </div>
+</div>
+<form method="post">
+    <div class="d-flex">
+        {% for tkt in tk_type %}
+        <div class="card">
+            <input type="radio" name="pricing" id="card{{tkt.id}}" value="{{tkt.id}}">
+            <label for="card{{tkt.id}}" class="card_label">
+                <h5>{{tkt.type}}</h5>
+                <h2><span>{{ "{:,.1f}".format(f.base_price + (2 - tkt.id) * 100000) }}</span></h2>
+            </label>
+        </div>
+        {% endfor %}
+    </div>
+    <h3>Thông tin hành khách</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <label for="inputName4" class="form-label">Name</label>
+            <input type="text" class="form-control" id="inputName4" name="name" required>
+        </div>
+        <div class="col-md-3">
+            <label for="inputId4" class="form-label">Identity</label>
+            <input type="identity" class="form-control" id="inputId4" name="identity_number" required>
+        </div>
+        <div class="col-md-3">
+            <label for="inputPhoneNumber4" class="form-label">Phone number</label>
+            <input type="phoneNumber" class="form-control" id="inputPhoneNumber4" name="phone_number" >
+        </div>
+        {% if current_user.is_authenticated and current_user.user_role.__eq__(role.USER) %}
+        <div class="form-floating mt-3 mb-3">
+            <input type="submit" class="btn btn-danger" value="Thanh toán"/>
+        </div>
+        {% elif current_user.is_authenticated and current_user.user_role.__eq__(role.EMPLOYEE) %}
+        <div class="form-floating mt-3 mb-3">
+            <input type="submit" class="btn btn-danger" value="Xuất vẽ"/>
+        </div>
+        {% else %}
+        {{current_user.user_role}}
+        <h1>Vui lòng <a href="/login?next=/flight/{{f.id}}">đăng nhập</a> để thanh toán</h1>
+        {% endif %}
+    </div>
+</form>
 {% endblock %}

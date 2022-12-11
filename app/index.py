@@ -1,8 +1,7 @@
-from datetime import datetime
 import cloudinary
 from flask import render_template, request, redirect, session, jsonify
 from app import app, dao, login_mana, admin, decorators
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from app import utils
 from app.models import UserRoleEnum
 
@@ -85,17 +84,55 @@ def logout_my_user():
     return redirect('/')
 
 
-@app.route('/booking', methods=['get', 'post'])
+@app.route('/booking')
 def booking():
     airport = dao.get_all_airport()
-    if request.method == "POST":
-        from_airport = int(request.json['fromAirport'])
-        to_airport = int(request.json['toAirport'])
-        start_day = request.json['trip-start']
-        flights = dao.get_flight(from_airport=from_airport, to_airport=to_airport, start_day=start_day)
-        return jsonify(flights)
-        # return render_template('/booking.html', flights=flights)
     return render_template('/booking.html', airport=airport)
+
+
+@app.route('/booking', methods=['post'])
+def load_flights():
+    from_airport = int(request.json['fromAirport'])
+    to_airport = int(request.json['toAirport'])
+    start_day = request.json['trip-start']
+    flights = dao.get_flight(from_airport=from_airport, to_airport=to_airport, start_day=start_day)
+    data = []
+    for f in flights:
+        data.append({
+            "id": f.id,
+            "takeoff_time": f.takeoff_time,
+            "flying_time": str(f.flying_time),
+            "base_price": f.base_price,
+            "flight_route": {
+                "departure_airport": f.flight_route.departure_airport.location,
+                "arrival_airport": f.flight_route.arrival_airport.location,
+                "departure_img": f.flight_route.departure_airport.picture,
+                "arrival_img": f.flight_route.arrival_airport.picture
+            }
+        })
+    return jsonify(data)
+
+
+@app.route('/flight/<flight_id>')
+def detail(flight_id):
+    ticket_type = dao.get_all_ticket_type()
+    flight = dao.get_flight_by_id(flight_id)
+    return render_template('/details.html', f=flight, tk_type=ticket_type, role=UserRoleEnum)
+
+
+@app.route('/flight/<flight_id>', methods=['POST'])
+def save_ticket(flight_id):
+    name = request.form['name']
+    identity = request.form['identity_number']
+    phone = request.form['phone_number']
+    f = dao.get_flight_by_id(flight_id)
+    tk_type = int(request.form['pricing'])
+    dao.save_ticket(ticket_type_id=tk_type, ticket_price=f.base_price + (2 - tk_type) * 100000,
+                    flight_id=int(flight_id))
+    if current_user.user_role.__eq__(UserRoleEnum.USER):
+        return redirect('/')
+    else:
+        return redirect('/admin')
 
 
 @login_mana.user_loader
