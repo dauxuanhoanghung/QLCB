@@ -1,0 +1,73 @@
+{% extends 'layout/base.html' %}
+{% block title %}Đặt vé{% endblock %}
+{% block content %}
+<h1 class="text text-dark text-center bg-info bg-gradient">Đặt vé chuyến bay</h1>
+{% if err_msg %}
+<div class="alert alert-success">
+    {{ err_msg }}
+</div>
+{% endif %}
+<hr>
+<div>
+    <form action="" class="row g-3">
+        <div class="row">
+            <div class="col-sm-6">
+                <select class="form-select browser-default custom-select mb-4 col-md-8 " id="fromAirport"
+                        name="fromAirport" aria-label=".form-select-sm example" required>
+                    <option value="" disabled="" selected>Sân bay đi</option>
+                    {% for a in airport %}
+                    <option value="{{ a.id }}" name="fromAirport">{{ a }}</option>
+                    {% endfor%}
+                </select>
+            </div>
+            <div class="col-sm-6">
+                <select class="form-select browser-default custom-select mb-4 col-md-8" id="toAirport" name="toAirport"
+                        aria-label=".form-select-sm example" required>
+                    <option value="" disabled="" selected>Sân bay đến</option>
+                    {% for a in airport %}
+                    <option value="{{ a.id }}">{{ a }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="start">Ngày bay: </label>
+                <input type="date" id="start" name="trip-start" class="col-md-5 form-control"
+                       value="22-12-10" min="22-12-01" max="23-12-31" required>
+            </div>
+            <div class="col-12">
+                <button type="button" class="btn btn-primary" id="find">Tìm kiếm</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% if flights %}
+<div>
+    {% for f in flights %}
+    <div class="col-md-3 col-sm-6 flight" id="flight{{f.id}}" style="padding:1.5rem;">
+        <a href="/flight/{{f.id}}">
+            <div class="flight-image">
+                <img src="{{ url_for('static', filename='/images/') }}{{ f.flight_route.departure_airport.picture }}"/>
+                <img src="{{ url_for('static', filename='/images/') }}{{ f.flight_route.arrival_airport.picture }}"/>
+            </div>
+            <div class="flight-info">
+                <h3 class="text-white">{{ f.flight_route.departure_airport.location }} đến</h3>
+                <h3 class="text-white">{{ f.flight_route.arrival_airport.location }}</h3>
+                <p class="text-white">{{ f.takeoff_time.strftime("%d-%m-%Y") }}</p>
+                <p class="text text-end text-white pe-4">Từ</p>
+                <h4 class=" text text-end text-warning pe-4">{{ "{:,.1f}".format(f.base_price) }} VNĐ</h4>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<script>
+document.getElementById('find').onclick = () => {
+let f = document.getElementById('fromAirport').value
+let t = document.getElementById('toAirport').value
+let s = document.getElementById('start').value
+    getFlights(f,t,s)
+}
+
+</script>
+{% endblock %}

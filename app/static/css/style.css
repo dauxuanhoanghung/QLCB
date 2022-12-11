@@ -69,3 +69,9 @@ a {
     bottom: 1rem;
     transition-duration: 1.25s;
 }
+footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}

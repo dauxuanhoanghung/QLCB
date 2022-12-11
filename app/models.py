@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Boolean, Float, String, Text, ForeignKey, Enum, DateTime, Time
+from sqlalchemy import Column, Integer, Boolean, Float, String, Text, ForeignKey, Enum, DateTime, Time, TIME
 from sqlalchemy.orm import relationship, backref
 from app import db, app
 from datetime import datetime
@@ -44,6 +44,8 @@ class Airport(BaseModel):
 class FlightRoute(BaseModel):
     arrival_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     departure_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
+    base_price = Column(Float, nullable=False, default=0)
+
     departure_airport = relationship('Airport', backref='flight_route1', lazy=True,
                                      foreign_keys='FlightRoute.departure_airport_id')
     arrival_airport = relationship('Airport', backref='flight_route2', lazy=True,
@@ -72,8 +74,7 @@ class Airplane(BaseModel):
 
 class Flight(BaseModel):
     takeoff_time = Column(DateTime, nullable=False)
-    landing_time = Column(DateTime, nullable=False)
-    flying_time = Column(Time, default=landing_time-takeoff_time)
+    flying_time = Column(Time)
     base_price = Column(Float, default=0)
     airplane_id = Column(Integer, ForeignKey(Airplane.id), nullable=False)
     flight_route_id = Column(Integer, ForeignKey(FlightRoute.id), nullable=False)
@@ -88,10 +89,13 @@ class Flight(BaseModel):
 
 
 class TransitAirport(BaseModel):
-    break_time = Column(DateTime, nullable=False)
+    break_time = Column(Time, nullable=False)
     flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
     airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     airport = relationship('Airport', backref='transit_airports', lazy=True)
+
+    def __str__(self):
+        return str(self.airport) + ' ' + str(self.break_time)
 
 
 class Seat(BaseModel):

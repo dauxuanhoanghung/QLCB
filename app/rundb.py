@@ -1,5 +1,7 @@
 from app.models import *
-from app import app, db
+from app import app, db, dao
+from datetime import datetime
+import hashlib
 
 if __name__ == '__main__':
     with app.app_context():
@@ -36,7 +38,7 @@ if __name__ == '__main__':
         db.session.add(apl3)
         db.session.add(apl4)
         db.session.add(apl5)
-        
+
         fl_route1 = FlightRoute(departure_airport_id=1, arrival_airport_id=2)
         fl_route2 = FlightRoute(departure_airport_id=2, arrival_airport_id=1)
         fl_route3 = FlightRoute(departure_airport_id=1, arrival_airport_id=3)
@@ -54,27 +56,34 @@ if __name__ == '__main__':
         db.session.add(fl_route7)
         db.session.add(fl_route8)
         '''
-        flight1 = Flight(takeoff_time='2022/12/10 23:00:00',
-                         landing_time='2022/12/11 18:00:00',
+        flight1 = Flight(takeoff_time=datetime(year=2022, month=12, day=24, hour=23),
+                         flying_time='10:00:00',
                          base_price=1700000,
                          airplane_id=1,
                          flight_route_id=1)
-        flight2 = Flight(takeoff_time='2022/12/13 17:00:00',
-                         landing_time='2022/12/14 3:00:00',
+        flight2 = Flight(takeoff_time=datetime(year=2022, month=12, day=25, hour=6),
+                         flying_time='10:00:00',
                          base_price=2600000,
                          airplane_id=2,
                          flight_route_id=3)
-        # flight3 = Flight(takeoff_time='2022/12/09 16:00:00',
-        #                  landing_time='2022/12/09 23:00:00',
-        #                  base_price=700000,
-        #                  airplane_id=3,
-        #                  flight_route_id=2)
+        flight3 = Flight(takeoff_time=datetime(year=2022, month=12, day=25, hour=6),
+                         flying_time='10:00:00',
+                         base_price=700000,
+                         airplane_id=3,
+                         flight_route_id=2)
         db.session.add(flight1)
         db.session.add(flight2)
-        # db.session.add(flight3)
+        db.session.add(flight3)
+        # u = User(name='Administrator', username='admin',
+        #          password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()),
+        #          user_role=UserRoleEnum.ADMIN)
+        # e = User(name='NV1', username='emp',
+        #          password=str(hashlib.md5('123456'.strip().encode('utf-8')).hexdigest()),
+        #          user_role=UserRoleEnum.EMPLOYEE)
+        # db.session.add(e)
+        # tk_type1 = TicketType(type="Hạng 1")
+        # tk_type2 = TicketType(type="Hạng 2")
+        # db.session.add(tk_type1)
+        # db.session.add(tk_type2)
+
         db.session.commit()
-
-
-
-
-

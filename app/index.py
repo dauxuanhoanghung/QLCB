@@ -1,20 +1,22 @@
+from datetime import datetime
 import cloudinary
-from flask import session
 from flask import render_template, request, redirect, session, jsonify
-from app import app, dao, login_mana, admin
+from app import app, dao, login_mana, admin, decorators
 from flask_login import login_user, logout_user, login_required
 from app import utils
+from app.models import UserRoleEnum
 
 
 @app.route('/')
 def index():
     apts = dao.get_all_airport()
-    flights = dao.get_flight()
+    flights = dao.get_all_flight()
     return render_template('/index.html', airports=apts,
                            flights=flights)
 
 
 @app.route('/login', methods=['get', 'post'])
+@decorators.anonymous_user
 def login_my_user():
     if request.method == 'POST':
         username = request.form['username']
@@ -32,7 +34,7 @@ def login_my_user():
 def login_admin():
     username = request.form['username']
     password = request.form['password']
-    u = dao.auth_user(username=username, password=password)
+    u = dao.auth_user(username=username, password=password, user_role=UserRoleEnum.ADMIN)
     if u:
         login_user(user=u)
 
@@ -45,6 +47,8 @@ def register_my_user():
     if request.method.__eq__('POST'):
         name = request.form.get('name')
         username = request.form.get('username')
+        if dao.check_username(username=username):
+            return render_template('/register.html', err_msg='username đã tồn tại')
         password = request.form.get('password')
         confirm = request.form.get('confirm')
         identity_number = request.form.get('identity_number')
@@ -79,6 +83,19 @@ def register_my_user():
 def logout_my_user():
     logout_user()
     return redirect('/')
+
+
+@app.route('/booking', methods=['get', 'post'])
+def booking():
+    airport = dao.get_all_airport()
+    if request.method == "POST":
+        from_airport = int(request.json['fromAirport'])
+        to_airport = int(request.json['toAirport'])
+        start_day = request.json['trip-start']
+        flights = dao.get_flight(from_airport=from_airport, to_airport=to_airport, start_day=start_day)
+        return jsonify(flights)
+        # return render_template('/booking.html', flights=flights)
+    return render_template('/booking.html', airport=airport)
 
 
 @login_mana.user_loader

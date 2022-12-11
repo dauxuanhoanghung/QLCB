@@ -1,11 +1,11 @@
-<form method="post" action="{{ url_for('login_admin') }}" class="row g-3">
-  <div class="col-md-8">
-            <label for="inputUsername4" class="form-label" >Username</label>
-            <input type="username" class="form-control" id="inputUsername4" name="username" required>
+<form method="post" action="{{ url_for('login_admin') }}">
+  <div class="mb-3 mt-3">
+    <label for="username" class="form-label">Tên đăng nhập:</label>
+    <input type="text" class="form-control" id="username" placeholder="Nhập username" name="username" required>
   </div>
-  <div class="col-md-8">
-            <label for="inputPassword4" class="form-label">Password</label>
-            <input type="password" class="form-control" id="inputPassword4" name="password" required>
+  <div class="mb-3">
+    <label for="pwd" class="form-label">Mật khẩu:</label>
+    <input type="password" class="form-control" id="pwd" placeholder="Nhập mật khẩu" name="password" required>
   </div>
   <button type="submit" class="btn btn-primary">Đăng nhập</button>
 </form>

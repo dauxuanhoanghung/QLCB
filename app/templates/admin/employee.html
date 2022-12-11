@@ -1,0 +1,24 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+<h1 class="text-center text-info">Quản lý nhân viên</h1>
+<table class="table">
+    <tr>
+        <th class="col-md-5">Tên nhân viên</th>
+        <th class="col-md-5">Username</th>
+        <th class="col-md-1"></th>
+        <th class="col-md-1"></th>
+    </tr>
+    {% for emp in employee %}
+    <tr id="{{ emp.id }}">
+        <td class="col-md-5">
+            <input type="text" value="{{ emp.name }}" style="width: 95%;" class="form-control"/>
+        </td>
+        <td class="col-md-5">
+            <input type="text" value="{{ emp.username }}" style="width: 95%;" class="form-control"/>
+        </td>
+        <td class="col-md-1"><button class="btn btn-primary">Edit</button></td>
+        <td class="col-md-1"><button class="btn btn-success">Save</button></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
