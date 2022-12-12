@@ -1,7 +1,7 @@
 function revenueChart(labels, data) {
     const ctx = document.getElementById('revenueChart');
 
-    new Chart(ctx, {
+    revenue = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -35,7 +35,7 @@ function revenueChart(labels, data) {
 function percentChart(labels, data) {
     const ctx = document.getElementById('percentChart');
 
-    new Chart(ctx, {
+    cha = new Chart(ctx, {
         type: 'pie',
         data: {
             labels: labels,

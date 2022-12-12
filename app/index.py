@@ -154,7 +154,8 @@ def fetch_json():
         data.append({
             "id": s[0],
             "flight_route": str(s[1].departure_airport.location) + ' - ' + str(s[1].arrival_airport.location),
-            "route_count": s[2]
+            "route_count": s[2],
+            "revenue": s[3] if s[3] else 0
         })
     return jsonify({
         "stats": data,

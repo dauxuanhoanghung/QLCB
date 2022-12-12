@@ -3,7 +3,7 @@ from datetime import datetime
 from app.models import *
 from app import db, app
 from flask_login import current_user
-from sqlalchemy import func
+from sqlalchemy import func, or_, and_
 import hashlib
 
 
@@ -94,22 +94,24 @@ def get_tickets_by_user_id(user_id):
 
 
 def count_flights_by_month(month, year):
-    return Flight.query.filter(Flight.takeoff_time.__ge__(datetime(
-        year=year, month=month, day=1))).filter(
-        Flight.takeoff_time.__le__(datetime(year=year, month=month, day=calendar.monthrange(year, month)[1]))).count()
+    return Flight.query.filter(and_(Flight.takeoff_time.__ge__(datetime(
+        year=year, month=month, day=1)),
+        Flight.takeoff_time.__le__(datetime(year=year, month=month, day=calendar.monthrange(year, month)[1])))).count()
 
 
 def stats_revenue(month, year):
-    query = db.session.query(FlightRoute.id, FlightRoute, func.count(Flight.id)) \
-        .join(Flight, Flight.flight_route_id.__eq__(FlightRoute.id), isouter=True) \
-        .group_by(FlightRoute.id)
-    query = query.filter(Flight.takeoff_time.__ge__(datetime(year=year, month=month, day=1)))
-    query = query.filter(Flight.takeoff_time.__le__(datetime(year=year, month=month, day=calendar.monthrange(year, month)[1])))
-    return query.all()
+    fl = db.session.query
+    query = db.session.query(FlightRoute.id, FlightRoute, func.count(Flight.id), func.sum(Ticket.ticket_price)) \
+        .join(Flight, and_(Flight.takeoff_time.__ge__(datetime(
+        year=year, month=month, day=1)),
+        Flight.takeoff_time.__le__(datetime(year=year, month=month, day=calendar.monthrange(year, month)[1])),
+        Flight.flight_route_id.__eq__(FlightRoute.id)), isouter=True) \
+        .join(Ticket, Ticket.flight_id.__eq__(Flight.id), isouter=True)
+    return query.group_by(FlightRoute.id).all()
 
 
 if __name__ == '__main__':
     with app.app_context():
-        # print(count_flights_by_month(11, 2022))
+        # print(count_flights_by_month(12, 2022))
         print(stats_revenue(12, 2022))
         # print(get_flight(from_airport=2, to_airport=1, start_day='2022-12-25'))

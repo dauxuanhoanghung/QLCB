@@ -56,19 +56,19 @@ if __name__ == '__main__':
         db.session.add(fl_route7)
         db.session.add(fl_route8)
         '''
-        flight1 = Flight(takeoff_time=datetime(year=2022, month=12, day=24, hour=23),
+        flight1 = Flight(takeoff_time=datetime(year=2023, month=1, day=1, hour=23),
                          flying_time='10:00:00',
-                         base_price=1700000,
+                         base_price=1750000,
                          airplane_id=1,
                          flight_route_id=1)
         flight2 = Flight(takeoff_time=datetime(year=2022, month=12, day=25, hour=6),
                          flying_time='10:00:00',
-                         base_price=2600000,
+                         base_price=2650000,
                          airplane_id=2,
                          flight_route_id=3)
-        flight3 = Flight(takeoff_time=datetime(year=2022, month=12, day=25, hour=6),
+        flight3 = Flight(takeoff_time=datetime(year=2023, month=1, day=1, hour=3),
                          flying_time='10:00:00',
-                         base_price=700000,
+                         base_price=860000,
                          airplane_id=3,
                          flight_route_id=2)
         db.session.add(flight1)

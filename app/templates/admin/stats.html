@@ -22,7 +22,7 @@
     </div>
 </div>
 <div class="row" id="table" style="display: none">
-    <div class="col-md-5 col-sm-12">
+    <div class="col-md-6 col-sm-12">
         <table class="table">
         </table>
     </div>
@@ -34,7 +34,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ url_for('static', filename='js/my-stats.js') }}"></script>
 <script>
-
+let cha = null;
+let revenue = null
 document.getElementById('fetch').onclick = () => {
     json = JSON.stringify({
         "year": document.getElementById('year').value,
@@ -53,11 +54,13 @@ document.getElementById('fetch').onclick = () => {
         document.getElementById('table').style.display = 'flex'
         let percentData = []
         let labels = []
+        let revenueData = []
         let tb = document.querySelector('table')
         tb.innerHTML = `<tr>
                 <th>Id</th>
                 <th>Tuyến bay</th>
                 <th>Số lượt bay</th>
+                <th>Doanh thu</th>
                 <th>Tỉ lệ</th>
             </tr>`
         data['stats'].forEach(e => {
@@ -65,12 +68,17 @@ document.getElementById('fetch').onclick = () => {
                 <td>${e.id}</td>
                 <td>${e.flight_route}</td>
                 <td>${e.route_count}</td>
-                <td>${e.route_count/data['flight_count'] * 100}%</td>
+                <td>${e.revenue}</td>
+                <td>${(e.route_count/data['flight_count'] * 100).toFixed(2)}%</td>
             </tr>`
             labels.push(e.flight_route)
             percentData.push(e.route_count)
+            revenueData.push(e.revenue)
         })
+        if (cha!=null) cha.destroy();
         percentChart(labels, percentData)
+        if (revenue!=null) revenue.destroy();
+        revenueChart(labels, revenueData)
     })
     .catch(err => console.log(err))
 }
