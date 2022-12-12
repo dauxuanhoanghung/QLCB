@@ -103,8 +103,8 @@ def stats_revenue(month, year):
     query = db.session.query(FlightRoute.id, FlightRoute, func.count(Flight.id)) \
         .join(Flight, Flight.flight_route_id.__eq__(FlightRoute.id), isouter=True) \
         .group_by(FlightRoute.id)
-    # query = query.filter(Flight.takeoff_time.__ge__(datetime(year=year, month=month, day=1)))
-    # query = query.filter(Flight.takeoff_time.__le__(datetime(year=year, month=month, day=calendar.monthrange(year, month)[1])))
+    query = query.filter(Flight.takeoff_time.__ge__(datetime(year=year, month=month, day=1)))
+    query = query.filter(Flight.takeoff_time.__le__(datetime(year=year, month=month, day=calendar.monthrange(year, month)[1])))
     return query.all()
 
 
