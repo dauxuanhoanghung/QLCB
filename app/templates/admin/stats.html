@@ -56,6 +56,7 @@ document.getElementById('fetch').onclick = () => {
         let labels = []
         let revenueData = []
         let tb = document.querySelector('table')
+
         tb.innerHTML = `<tr>
                 <th>Id</th>
                 <th>Tuyến bay</th>
@@ -75,6 +76,11 @@ document.getElementById('fetch').onclick = () => {
             percentData.push(e.route_count)
             revenueData.push(e.revenue)
         })
+        let sumRevenue = data['stats'].reduce((sum, curr) => {
+            return sum + curr['revenue']
+        }, 0)
+        tb.innerHTML += `<td>Tổng doanh thu: </td>
+                            <td>${sumRevenue}</td>`
         if (cha!=null) cha.destroy();
         percentChart(labels, percentData)
         if (revenue!=null) revenue.destroy();

@@ -47,6 +47,7 @@ class FlightRouteModelView(AuthenticatedModelView):
         'departure_airport': 'Sân bay khởi hành',
         'arrival_airport': 'Sân bay đến',
     }
+    column_filters = ('departure_airport.location', 'arrival_airport.location')
     column_sortable_list = ('departure_airport_id', 'arrival_airport_id')
     page_size = 12
     form_columns = ('departure_airport', 'arrival_airport',)
@@ -58,8 +59,10 @@ class FlightModelView(EmployeeView):
         'flight_route': 'Tuyến bay',
         'takeoff_time': 'Thời gian khởi hành',
         'flying_time': 'Thời gian bay',
+        'number_of_seat_type1': 'Số ghế hạng 1',
         'base_price': 'Giá vé cơ bản'
     }
+    column_filters = ('flight_route.departure_airport.location', 'takeoff_time')
     form_excluded_columns = ('transit_airports', 'tickets',)
 
 
@@ -107,7 +110,14 @@ class LogoutView(AuthenticatedView):
         return redirect('/admin')
 
 
+class SellView(AuthenticatedView):
+    @expose('/')
+    def index(self):
+        return redirect('/booking')
+
+
 admin = Admin(app=app, name='Quản lý chuyến bay', template_mode='bootstrap4', index_view=MyAdminView())
+admin.add_view(SellView(name="Bán vé"))
 admin.add_view(AirportModelView(Airport, db.session, name='Sân bay'))
 admin.add_view(FlightModelView(Flight, db.session, name='Chuyến bay'))
 admin.add_view(FlightRouteModelView(FlightRoute, db.session, name='Tuyến bay'))

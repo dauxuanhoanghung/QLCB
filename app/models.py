@@ -55,14 +55,6 @@ class FlightRoute(BaseModel):
         return self.departure_airport.location + ' - ' + self.arrival_airport.location
 
 
-# class ArrivalAirportOfRoute(BaseModel):
-#     arrival_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
-#     flight_route_id = Column(Integer, ForeignKey(FlightRoute.id), nullable=False)
-# class DepartureAirportOfRoute(BaseModel):
-#     departure_airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
-#     flight_route_id = Column(Integer, ForeignKey(FlightRoute.id), nullable=False)
-
-
 class Airplane(BaseModel):
     name = Column(String(15), nullable=False)
     number_of_seat = Column(Integer, nullable=False, default=80)
@@ -75,6 +67,7 @@ class Airplane(BaseModel):
 class Flight(BaseModel):
     takeoff_time = Column(DateTime, nullable=False)
     flying_time = Column(Time)
+    number_of_seat_type1 = Column(Integer, default=20)
     base_price = Column(Float, default=0)
     airplane_id = Column(Integer, ForeignKey(Airplane.id), nullable=False)
     flight_route_id = Column(Integer, ForeignKey(FlightRoute.id), nullable=False)

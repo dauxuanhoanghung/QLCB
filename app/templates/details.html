@@ -1,5 +1,8 @@
 {% extends 'layout/base.html' %}
 {% block content %}
+{% if msg %}
+<h3 class="text-danger">{{msg}}</h3>
+{% endif %}
 <div class="row">
     <div class="col-md-6">
         <h2 class="mb-0">{{f.flight_route.departure_airport.location}} đến</h2>
@@ -17,12 +20,16 @@
 </div>
 <form method="post">
     <div class="d-flex">
-        {% for tkt in tk_type %}
+        {% for tkt in ticket_seat %}
         <div class="card">
-            <input type="radio" name="pricing" id="card{{tkt.id}}" value="{{tkt.id}}">
-            <label for="card{{tkt.id}}" class="card_label">
-                <h5>{{tkt.type}}</h5>
-                <h2><span>{{ "{:,.1f}".format(f.base_price + (2 - tkt.id) * 100000) }}</span></h2>
+            <input type="radio" name="pricing" id="card{{tkt['ticket'].id}}" value="{{tkt['ticket'].id}}"
+                {% if tkt["number_of_seat"] == 0%}
+                disable
+                {% endif %}
+            >
+            <label for="card{{tkt['ticket'].id}}" class="card_label">
+                <h5>{{tkt['ticket'].type}} còn {{tkt['number_of_seat']}} vé</h5>
+                <h2><span>{{ "{:,.1f}".format(f.base_price + (2 - tkt['ticket'].id) * 100000) }}</span></h2>
             </label>
         </div>
         {% endfor %}
@@ -41,17 +48,18 @@
             <label for="inputPhoneNumber4" class="form-label">Phone number</label>
             <input type="phoneNumber" class="form-control" id="inputPhoneNumber4" name="phone_number" >
         </div>
-        {% if current_user.is_authenticated and current_user.user_role.__eq__(role.USER) %}
-        <div class="form-floating mt-3 mb-3">
-            <input type="submit" class="btn btn-danger" value="Thanh toán"/>
-        </div>
-        {% elif current_user.is_authenticated and current_user.user_role.__eq__(role.EMPLOYEE) %}
-        <div class="form-floating mt-3 mb-3">
-            <input type="submit" class="btn btn-danger" value="Xuất vẽ"/>
-        </div>
+        {% if current_user.is_authenticated %}
+            {% if current_user.user_role.__eq__(role.USER) %}
+            <div class="form-floating mt-3 mb-3">
+                <input type="submit" class="btn btn-danger" value="Thanh toán"/>
+            </div>
+            {% else %}
+                <div class="form-floating mt-3 mb-3">
+                <input type="submit" class="btn btn-danger" value="Xuất vé"/>
+                </div>
+            {% endif %}
         {% else %}
-        {{current_user.user_role}}
-        <h1>Vui lòng <a href="/login?next=/flight/{{f.id}}">đăng nhập</a> để thanh toán</h1>
+            <h1>Vui lòng <a href="/login?next=/flight/{{f.id}}">đăng nhập</a> để thanh toán</h1>
         {% endif %}
     </div>
 </form>
